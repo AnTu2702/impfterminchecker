@@ -11,10 +11,10 @@ def lambda_handler(event, context):
     response = requests.get(baseurl+vaccid)
 	
     regex = r'(.*)' + re.escape('<div class="panel-body">') + r'(.*)' + re.escape('</div> <div class="panel-footer">') + r'(.*)'
-    htmlString = re.sub(' +',' ', response.text.replace("\r\n","").replace("\t"," "))
+    htmlStr = re.sub(' +',' ', response.text.replace("\r\n","").replace("\t"," "))
 
     try:
-        matchObj = re.match(regex, htmlString)
+        matchObj = re.match(regex, htmlStr)
 	message = matchObj.group(2).strip()
     except:
         boto3.client('sns').publish(TargetArn=snsArn, Message=message, Subject=vaccine)
