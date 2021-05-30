@@ -1,6 +1,6 @@
 {
   "vaccid": "3",
   "vaccine": "Biontech",
-  "baseurl": "https://www.terminland.de/<xxxxxxxx>/default.aspx?dpp=0&dlgid=4&step=3&dlg=2&grp100=",
-  "snsarn": "arn:aws:sns:eu-central-1:<aaaaaaaaaaaa>:<tttttttt>"
+  "baseurl": "https://www.terminland.de/<your-doctor>/default.aspx?dpp=0&dlgid=4&step=3&dlg=2&grp100=",
+  "snsarn": "arn:aws:sns:eu-central-1:<your-aws-account>:<your-sns-topic>"
 }
