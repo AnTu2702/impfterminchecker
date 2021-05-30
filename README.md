@@ -1,5 +1,5 @@
 # impfterminchecker
-Automatically check and notify (push) for vaccination dates offered via terminland.de
+Automatically check for and (push) notify about vaccination dates offered via terminland.de
 
 Code may be uploaded as AWS-Lambda (Python 3.x)
 <img src="images/aws_lambda_overview.png"/>
