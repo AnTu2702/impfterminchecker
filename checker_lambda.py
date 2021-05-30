@@ -8,19 +8,18 @@ def lambda_handler(event, context):
 	snsArn = event['snsarn']
 	
 	message = 'Bitte sofort Termine für den Impfstoff ' + vaccine + ' manuell checken!'
-
 	response = requests.get(baseurl+vaccid)
 
 	regex = r'(.*)' + re.escape('<div class="panel-body">') + r'(.*)' + re.escape('</div> <div class="panel-footer">') + r'(.*)'
-
 	collectionsHtml = re.sub(' +',' ', response.text.replace("\r\n","").replace("\t"," "))
 	
 	try:
 		matchObj = re.match(regex, collectionsHtml)
-		message = matchObj.group(2)
+		message = matchObj.group(2).strip()
 		
 	except:
-		response = boto3.client('sns').publish(TargetArn=snsArn, Message=message, Subject=vaccine)
+		boto3.client('sns').publish(TargetArn=snsArn, Message=message, Subject=vaccine)
 		
 	finally:
-		print(f"{vaccine}: {message}" + "\r\n" + f"{baseurl}{vaccid}")
+		print(f"{baseurl}{vaccid}")
+		return f"{vaccine}: {message}"
