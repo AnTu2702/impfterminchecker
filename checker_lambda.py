@@ -7,7 +7,7 @@ def lambda_handler(event, context):
     baseurl = event['baseurl']
     snsArn = event['snsarn']
 
-    message = f"Bitte sofort Termine für den Impfstoff {vaccine} manuell checken! + f"\r\n\r\n{baseurl}{vaccid}"
+    message = f"Bitte sofort Termine für den Impfstoff {vaccine} manuell checken!\r\n\r\n{baseurl}{vaccid}"
     regex = r'(.*)' + re.escape('<div class="panel-body">') + r'(.*)' + re.escape('</div> <div class="panel-footer">') + r'(.*)'
 
     try:
