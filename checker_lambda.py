@@ -16,5 +16,4 @@ def lambda_handler(event, context):
     except:
         boto3.client('sns').publish(TargetArn=snsArn, Message=message, Subject=vaccine)
     finally:
-        print(f"{baseurl}{vaccid}")
         return f"{vaccine}: {message}"
