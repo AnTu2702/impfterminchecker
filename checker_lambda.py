@@ -12,7 +12,7 @@ def lambda_handler(event, context):
 
     try:
         response = requests.get(baseurl+vaccid)
-        message = re.match(regex, re.sub(' +',' ', response.text.replace("\r\n","").replace("\t"," "))).group(2).strip()
+        message = re.match(regex, re.sub(' +',' ', response.text.replace("\r\n","").replace("\t"," "))).group(2).strip() + f"\r\n\r\n{baseurl}{vaccid}"
     except:
         boto3.client('sns').publish(TargetArn=snsArn, Message=message, Subject=vaccine)
     finally:
