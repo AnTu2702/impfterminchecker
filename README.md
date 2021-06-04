@@ -14,7 +14,7 @@ AWS-SNS will be used for notification...
 <img src="images/aws_sns.png"/>
 
 AWS-SNS Lambda Target Configuration...
-<img src="aws_lambda_sns_target.png"/>
+<img src="images/aws_lambda_sns_target.png"/>
 
 ---
 
