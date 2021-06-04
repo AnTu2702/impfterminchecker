@@ -1,3 +1,5 @@
+import re, requests, boto3
+
 def lambda_handler(event, context):
 
     vaccine = event['vaccine']
