@@ -4,7 +4,6 @@ def extract_from(text, lhs, rhs):
     
     regex = r'(.*)' + re.escape(lhs) + r'(.*)' + re.escape(rhs) + r'(.*)'
     string = re.sub(' +',' ', text.replace("\r\n","").replace("\t"," "))
-    
     return re.match(regex, string).group(2).strip()
     
 def lambda_handler(event, context):
