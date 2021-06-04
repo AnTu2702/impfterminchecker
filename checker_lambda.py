@@ -1,9 +1,9 @@
 import re, requests, boto3
 
-def extract_from(response, lhs, rhs):
+def extract_from(text, lhs, rhs):
     
     regex = r'(.*)' + re.escape(lhs) + r'(.*)' + re.escape(rhs) + r'(.*)'
-    string = re.sub(' +',' ', response.text.replace("\r\n","").replace("\t"," "))
+    string = re.sub(' +',' ', text.replace("\r\n","").replace("\t"," "))
     
     return re.match(regex, string).group(2).strip()
     
@@ -19,11 +19,11 @@ def lambda_handler(event, context):
     try:
         response = requests.get(baseurl+vaccid)
         if 'Wartezeit' in response.text:
-            r_min = extract_from(response, '<span id="lblMin">', '</span> Minuten')
-            r_sec = extract_from(response, '<span id="lblSec">', '</span> Sekunden')
+            r_min = extract_from(response.text, '<span id="lblMin">', '</span> Minuten')
+            r_sec = extract_from(response.text, '<span id="lblSec">', '</span> Sekunden')
             message = f"Webseite verlangt Wartezeit - Minuten {r_min} Sekunden {r_sec}. Probiere es später wieder..."
         else:
-            message = extract_from(response, '<div class="panel-body">', '</div> <div class="panel-footer">')
+            message = extract_from(response.text, '<div class="panel-body">', '</div> <div class="panel-footer">')
     except:
         boto3.client('sns').publish(TargetArn=snsArn, Message=message, Subject=vaccine)
     finally:
