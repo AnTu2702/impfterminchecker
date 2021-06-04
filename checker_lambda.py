@@ -1,5 +1,12 @@
 import re, requests, boto3
 
+def extract_from(response, lhs, rhs):
+    
+    regex = r'(.*)' + re.escape(lhs) + r'(.*)' + re.escape(rhs) + r'(.*)'
+    string = re.sub(' +',' ', response.text.replace("\r\n","").replace("\t"," "))
+    
+    return re.match(regex, string).group(2).strip()
+    
 def lambda_handler(event, context):
 
     vaccine = event['vaccine']
@@ -8,18 +15,15 @@ def lambda_handler(event, context):
     snsArn = event['snsarn']
 
     message = f"Bitte sofort Termine für den Impfstoff {vaccine} manuell checken!\r\n\r\n{baseurl}{vaccid}"
-    regex = r'(.*)' + re.escape('<div class="panel-body">') + r'(.*)' + re.escape('</div> <div class="panel-footer">') + r'(.*)'
 
     try:
         response = requests.get(baseurl+vaccid)
         if 'Wartezeit' in response.text:
-            rg_min = r'(.*)' + re.escape('<span id="lblMin">') + r'(.*)' + re.escape('</span> Minuten') + r'(.*)'
-            rg_sec = r'(.*)' + re.escape('<span id="lblSec">') + r'(.*)' + re.escape('</span> Sekunden') + r'(.*)'
-            r_min = re.match(rg_min, re.sub(' +',' ', response.text.replace("\r\n","").replace("\t"," "))).group(2).strip()
-            r_sec = re.match(rg_sec, re.sub(' +',' ', response.text.replace("\r\n","").replace("\t"," "))).group(2).strip()
+            r_min = extract_from(response, '<span id="lblMin">', '</span> Minuten')
+            r_sec = extract_from(response, '<span id="lblSec">', '</span> Sekunden')
             message = f"Webseite verlangt Wartezeit - Minuten {r_min} Sekunden {r_sec}. Probiere es später wieder..."
         else:
-            message = re.match(regex, re.sub(' +',' ', response.text.replace("\r\n","").replace("\t"," "))).group(2).strip()
+            message = extract_from(response, '<div class="panel-body">', '</div> <div class="panel-footer">')
     except:
         boto3.client('sns').publish(TargetArn=snsArn, Message=message, Subject=vaccine)
     finally:
