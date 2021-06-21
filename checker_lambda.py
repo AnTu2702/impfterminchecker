@@ -25,6 +25,8 @@ def lambda_handler(event, context):
             message = f"Keine Termine vorhanden derzeit...!"
         else:
             message = extract_from(response.text, '<div class="panel-body">', '</div> <div class="panel-footer">')
+            if '<label class="tl-radio">' in response.text:
+                raise Exception()
     except:
         boto3.client('sns').publish(TargetArn=snsArn, Message=message, Subject=vaccine)
     finally:
